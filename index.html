@@ -369,63 +369,6 @@
             }
         }
         
-        // Task Block 2-1: Tooltip that pops up when clicked
-         // Task Block 2-1: Умный тултип
-        function setupTooltip() {
-            const trigger = document.getElementById('tooltip-trigger');
-            const tooltip = document.getElementById('tooltip');
-            
-            if (trigger && tooltip) {
-                // Показываем/скрываем тултип по клику
-                trigger.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    if (tooltip.style.display === 'block') {
-                        tooltip.style.display = 'none';
-                    } else {
-                        positionTooltip();
-                        tooltip.style.display = 'block';
-                    }
-                });
-                
-                // Скрываем тултип при клике вне его
-                document.addEventListener('click', function(e) {
-                    if (!tooltip.contains(e.target)) {
-                        tooltip.style.display = 'none';
-                    }
-                });
-                
-                // Функция позиционирования тултипа
-                function positionTooltip() {
-                    const triggerRect = trigger.getBoundingClientRect();
-                    const tooltipRect = tooltip.getBoundingClientRect();
-                    const windowWidth = window.innerWidth;
-                    const windowHeight = window.innerHeight;
-                    
-                    // Позиционируем снизу по умолчанию
-                    let top = triggerRect.bottom + 5;
-                    let left = triggerRect.left;
-                    
-                    // Если не помещается снизу - позиционируем сверху
-                    if (top + tooltipRect.height > windowHeight) {
-                        top = triggerRect.top - tooltipRect.height - 5;
-                    }
-                    
-                    // Если не помещается справа - сдвигаем влево
-                    if (left + tooltipRect.width > windowWidth) {
-                        left = windowWidth - tooltipRect.width - 5;
-                    }
-                    
-                    // Если не помещается слева - сдвигаем вправо
-                    if (left < 0) {
-                        left = 5;
-                    }
-                    
-                    tooltip.style.top = top + 'px';
-                    tooltip.style.left = left + 'px';
-                }
-            }
-        }
         
         // Task Block 2-2: Swap table columns
         function swapColumns(col1, col2) {
