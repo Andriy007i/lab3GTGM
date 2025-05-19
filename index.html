@@ -69,34 +69,24 @@
             background: white;
             z-index: 10;
         }
-        
-        /* Task Block 2-1 - Tooltip */
-        .tooltip-container {
-            position: relative;
+        .font-controls {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
             display: inline-block;
-            margin: 40px 0;
         }
         
-        #tooltip-trigger {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+        .font-controls button {
+            padding: 5px 10px;
+            margin: 0 5px;
             cursor: pointer;
         }
         
-        .tooltip {
-            position: absolute;
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            z-index: 100;
-            display: none;
-            max-width: 200px;
+        .content {
+            margin-top: 20px;
+            line-height: 1.6;
         }
-        
         /* Task Block 2-2 - Table with swappable columns */
         #swappable-table {
             width: 100%;
@@ -183,7 +173,18 @@
 </head>
 <body>
     <h1>JavaScript Tasks Implementation</h1>
+    <div class="font-controls">
+        <button id="decrease-font">A-</button>
+        <span id="font-size-display">16px</span>
+        <button id="increase-font">A+</button>
+    </div>
     
+    <div class="content" id="text-content">
+        <h2>Sample Text</h2>
+        <p>This is some sample text whose size can be adjusted using the buttons above.</p>
+        <p>The selected font size will be remembered when you return to this page.</p>
+    </div>
+
     <!-- Task 1 - Font size function -->
     <div class="font-size-demo">
         <h2>Task 1: Font Size Function</h2>
@@ -535,6 +536,62 @@
             
             // Инициализируем цвет квадрата
             changeSquareColor();
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('text-content');
+            const decreaseBtn = document.getElementById('decrease-font');
+            const increaseBtn = document.getElementById('increase-font');
+            const sizeDisplay = document.getElementById('font-size-display');
+            
+            // Минимальный и максимальный размер шрифта
+            const MIN_SIZE = 12;
+            const MAX_SIZE = 24;
+            const DEFAULT_SIZE = 16;
+            
+            // Получаем сохраненный размер из cookie или используем по умолчанию
+            function getFontSizeFromCookie() {
+                const name = 'fontSize=';
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const ca = decodedCookie.split(';');
+                
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) === 0) {
+                        return parseInt(c.substring(name.length, c.length));
+                    }
+                }
+                return DEFAULT_SIZE;
+            }
+            
+            // Устанавливаем размер шрифта
+            function setFontSize(size) {
+                size = Math.max(MIN_SIZE, Math.min(size, MAX_SIZE));
+                content.style.fontSize = size + 'px';
+                sizeDisplay.textContent = size + 'px';
+                
+                // Сохраняем в cookie на 30 дней
+                const date = new Date();
+                date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+                document.cookie = `fontSize=${size}; expires=${date.toUTCString()}; path=/`;
+            }
+            
+            // Инициализация
+            const initialSize = getFontSizeFromCookie();
+            setFontSize(initialSize);
+            
+            // Обработчики кнопок
+            decreaseBtn.addEventListener('click', function() {
+                const currentSize = parseInt(getComputedStyle(content).fontSize);
+                setFontSize(currentSize - 1);
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                const currentSize = parseInt(getComputedStyle(content).fontSize);
+                setFontSize(currentSize + 1);
+            });
         });
     </script>
 </body>
