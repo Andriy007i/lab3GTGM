@@ -369,46 +369,55 @@
         }
         
         // Task Block 2-1: Tooltip that pops up when clicked
+         // Task Block 2-1: Умный тултип
         function setupTooltip() {
-            const tooltipTrigger = document.getElementById('tooltip-trigger');
+            const trigger = document.getElementById('tooltip-trigger');
             const tooltip = document.getElementById('tooltip');
             
-            if (tooltipTrigger && tooltip) {
-                tooltipTrigger.addEventListener('click', function(e) {
+            if (trigger && tooltip) {
+                // Показываем/скрываем тултип по клику
+                trigger.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    positionTooltip();
-                    tooltip.style.display = 'block';
+                    
+                    if (tooltip.style.display === 'block') {
+                        tooltip.style.display = 'none';
+                    } else {
+                        positionTooltip();
+                        tooltip.style.display = 'block';
+                    }
                 });
                 
-                document.addEventListener('click', function() {
-                    tooltip.style.display = 'none';
+                // Скрываем тултип при клике вне его
+                document.addEventListener('click', function(e) {
+                    if (!tooltip.contains(e.target) {
+                        tooltip.style.display = 'none';
+                    }
                 });
                 
+                // Функция позиционирования тултипа
                 function positionTooltip() {
-                    const triggerRect = tooltipTrigger.getBoundingClientRect();
+                    const triggerRect = trigger.getBoundingClientRect();
                     const tooltipRect = tooltip.getBoundingClientRect();
                     const windowWidth = window.innerWidth;
                     const windowHeight = window.innerHeight;
                     
-                    // Default position - below the button
+                    // Позиционируем снизу по умолчанию
                     let top = triggerRect.bottom + 5;
                     let left = triggerRect.left;
                     
-                    // Check if it would go off the bottom of the screen
+                    // Если не помещается снизу - позиционируем сверху
                     if (top + tooltipRect.height > windowHeight) {
-                        // Try above the button
                         top = triggerRect.top - tooltipRect.height - 5;
-                        
-                        // If still off screen, try right side
-                        if (top < 0) {
-                            top = triggerRect.top;
-                            left = triggerRect.right + 5;
-                            
-                            // If off right side, try left side
-                            if (left + tooltipRect.width > windowWidth) {
-                                left = triggerRect.left - tooltipRect.width - 5;
-                            }
-                        }
+                    }
+                    
+                    // Если не помещается справа - сдвигаем влево
+                    if (left + tooltipRect.width > windowWidth) {
+                        left = windowWidth - tooltipRect.width - 5;
+                    }
+                    
+                    // Если не помещается слева - сдвигаем вправо
+                    if (left < 0) {
+                        left = 5;
                     }
                     
                     tooltip.style.top = top + 'px';
